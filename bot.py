@@ -1,29 +1,31 @@
 from aiogram.dispatcher import FSMContext
+import asyncio
+import sqlite3
 from aiogram import executor, Dispatcher
 from datetime import date, datetime, time
 from dispatcher import dp
-import handlers
-from handlers import reminder
-from handlers.reminder import scheduler, data_time, FSMRe, year, month, day, hours, minutes
+from handlers.reminder import scheduler, data_time, year, month, day, hours, minutes
 from db import reminderdb
 from aiogram.dispatcher.filters.state import State, StatesGroup
+import sqlite3 as sq
 
+base = sq.connect("reminder.db")
+cur = base.cursor()
 class FSMRe(StatesGroup):
     qtext = State()
     qdate = State()
     qtime = State()
 
-# async def my_function(time1):
-#     text = time
-
 async def send_message_to_admin(dp: Dispatcher, state: FSMContext):
-    await dp.bot.send_message.answer(text)
-    await reminderdb.sqlite_add(state)
+    # cur.execute("SELECT text FROM reminder LIMIT 1")
+    # row = cur.fetchone()
+    # reminder_text = row[0]
+    await dp.bot.send_message.answer()
 
-def schedule_jobs():
-    scheduler.add_job(send_message_to_admin, "date", run_date=datetime(year, month, day, hours, minutes), timezone='Europe/Kiev', args=(dp,))
+def schedule_jobs(state: FSMContext):
+    scheduler.add_job(send_message_to_admin, "date", run_date="2023-02-24 21:10:00", timezone='Europe/Kiev', args=(dp,     state     ))
 
-async def on_startup(dp):
+async def on_startup(_):
     schedule_jobs()
     reminderdb.start()
     
@@ -31,4 +33,4 @@ async def on_startup(dp):
 
 if __name__ == "__main__":
     scheduler.start()
-    executor.start_polling(dp, skip_updates=True) #, on_startup=on_startup
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
