@@ -5,7 +5,8 @@ from dispatcher import dp
 # # start
 # @dp.message_handler(commands=('start'))
 # async def start(message: types.Message):
-    # await message.answer("Хай! Мене звуть Ромбі! Для отримання списку команд введи - /help. В мені з'явилося невеличке оновлення! Якщо хочеш подивитися що змінилося напиши - /renewal")
+#     await message.answer(message)
+#     await message.answer("Хай! Мене звуть Ромбі! Для отримання списку команд введи - /help. В мені з'явилося невеличке оновлення! Якщо хочеш подивитися що змінилося напиши - /renewal")
 
 
 # # help
