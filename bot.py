@@ -7,16 +7,27 @@ from handlers.reminder import scheduler, data_time, year, month, day, hours, min
 from db import reminderdb
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import sqlite3 as sq
+year = datetime.now().year
 base = sq.connect("reminder.db")
 cur = base.cursor()
-seconds = '00'
-# year = int(year)
-# day = int(day)
-# hours = int(hours)
-# minutes = int(minutes)
-# seconds = int(seconds)
-text_msg = 'text'
+db_time = cur.execute("SELECT time FROM reminder")
+time = cur.fetchone()[0]
+db_text = cur.execute("SELECT text FROM reminder")
+text = cur.fetchone()[0]
+db_date = cur.execute("SELECT date FROM reminder")
+date = cur.fetchone()[0]
 
+year = datetime.now().year
+date_str = date
+time_str = time
+
+# Задаємо формат дати та часу
+date_format = '%m-%d'
+time_format = '%H:%M'
+
+# Перетворюємо рядки у об'єкти datetime
+date_obj = datetime.strptime(date_str, date_format).date()
+time_obj = datetime.strptime(time_str, time_format).time()
 
 
 class FSMRe(StatesGroup):
@@ -26,22 +37,19 @@ class FSMRe(StatesGroup):
 
 
 async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str):
-    # cur.execute("SELECT text FROM reminder LIMIT 1")
-    # row = cur.fetchone()
-    # reminder_text = row[0]
-    # text_msg = 'text'   #cur.execute("SELECT text FROM reminder LIMIT 1")
     message = await dp.bot.send_message(chat_id, text)
-    # await message.answer(text) 
-
-# run_scheduler = datetime(year=year, month=month, day=day, hour=hours, minute=minutes, second=seconds)
-
 def schedule_jobs(chat_id, text):
-    scheduler.add_job(send_message_to_admin, "date", run_date="{year}-{month}-{day} {hours}:{minutes}:00",
+    scheduler.add_job(send_message_to_admin, trigger="date", run_date=f"{year}-{date_str} {time_str}",
                       timezone='Europe/Kiev', args=(dp, chat_id, text))
 
-
 async def on_startup(_):
-    schedule_jobs('5197139803', text_msg)
+    print("time_obj", time_obj)
+    print("text", text)
+    print("date_obj", date_obj)
+    print(type(time_obj))
+    print(type(text))
+    print(type(date_obj))
+    schedule_jobs('5197139803', text)
     reminderdb.start()
     
 
