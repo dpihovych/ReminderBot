@@ -28,6 +28,11 @@ time_format = '%H:%M'
 # Перетворюємо рядки у об'єкти datetime
 date_obj = datetime.strptime(date_str, date_format).date()
 time_obj = datetime.strptime(time_str, time_format).time()
+datetime_obj = datetime.combine(date_obj, time_obj)
+datetime_upd = str(datetime_obj)
+datetime_upd = datetime.strptime(datetime_upd, '%Y-%m-%d %H:%M:%S')
+# datetime_upd = int(datetime_upd)
+# datetime_int = int(datetime_obj.strftime('%Y-%m-%d %H:%M'))
 
 
 class FSMRe(StatesGroup):
@@ -37,9 +42,9 @@ class FSMRe(StatesGroup):
 
 
 async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str):
-    message = await dp.bot.send_message(chat_id, text)
+    await dp.bot.send_message(chat_id, text)
 def schedule_jobs(chat_id, text):
-    scheduler.add_job(send_message_to_admin, trigger="date", run_date=f"{year}-{date_str} {time_str}",
+    scheduler.add_job(send_message_to_admin, "date", run_date=datetime(f"{year}-{date_str} {time_str}"),
                       timezone='Europe/Kiev', args=(dp, chat_id, text))
 
 async def on_startup(_):
@@ -49,6 +54,9 @@ async def on_startup(_):
     print(type(time_obj))
     print(type(text))
     print(type(date_obj))
+    print(type(datetime_obj), datetime_obj)
+    print(type(datetime_upd), datetime_upd)
+    # print(type(datetime_int), datetime_int)
     schedule_jobs('5197139803', text)
     reminderdb.start()
     
