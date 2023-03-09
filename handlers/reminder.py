@@ -42,7 +42,24 @@ async def set_text(message: types.Message, state: FSMContext):
     await FSMRe.next()
     await message.reply("Ваше нагадування було встановленно успішно!")
     await reminderdb.sqlite_add(state)
+    # await asyncio.sleep(get_time_to_sleep("13:00"))
     await state.finish()
+
+# def get_time_to_sleep(str_time: str) -> float:
+#     # Get current time
+#     now = datetime.now()
+#     # Get time to sleep
+#     time_to_sleep = (
+#         datetime.combine(date.today(), time(*map(int, str_time.split(":")))) - now
+#     )
+#     # Get time to sleep in seconds
+#     time_to_sleep = time_to_sleep.total_seconds()
+#     # If time to sleep is negative, add 24 hours
+#     if time_to_sleep < 0:
+#         time_to_sleep += 24 * 60 * 60
+#     return time_to_sleep
+
+
 
 # @dp.message_handler(state=FSMRe.qtime)
 # async def set_time(message: types.Message, state: FSMContext):
