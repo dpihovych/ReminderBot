@@ -18,12 +18,14 @@ base = sq.connect("reminder.db")
 cur = base.cursor()
 text = "" 
 send = nows
-send = now.strftime("%Y-%m-%d %H:%M")
-date_format = "%Y-%m-%d %H:%M"
-
-date_time_obj = datetime.strptime(send, date_format)
-print("Об'єкт datetime:", date_time_obj)
-print("Тип об'єкту datetime:", type(date_time_obj))
+send = now.strptime(send, "%Y-%m-%d %H:%M") # перевожу в стрінг
+date_format = "%Y-%m-%d %H:%M:%S.%f"
+send = send.replace(second=0) #microsecond=0,
+print("send after replace", send)
+print("send type after replace", type(send))
+# date_time_obj = datetime.strptime(send, date_format)
+# print("Об'єкт datetime:", date_time_obj)
+# print("Тип об'єкту datetime:", type(date_time_obj))
 print("first send type", type(send))
 send_date = f"{now}"
 
@@ -46,6 +48,7 @@ class FSMRe(StatesGroup):
 async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str):
     cur.execute("SELECT date FROM reminder WHERE id=1")
     send_date = cur.fetchone()[0]
+    send = datetime.strptime(send_date, '%Y-%m-%d %H:%M:%S.%f')
     cur.execute("SELECT text FROM reminder WHERE id=1")
     text = cur.fetchone()[0] 
     await dp.bot.send_message(chat_id, text)
@@ -54,7 +57,6 @@ async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str):
     
 
 def schedule_jobs(chat_id, text):
-    send = datetime.strptime(send_date, '%Y-%m-%d %H:%M') 
     print("Сенд в функції джобс",send)
     print("Тип сенда в функції джобс",type(send))
     scheduler.add_job(send_message_to_admin, "date", run_date=f"{send}",
