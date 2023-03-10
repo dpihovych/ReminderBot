@@ -1,2 +1,2 @@
 from . import reminder
-from . import pa
+from . import personal_actions

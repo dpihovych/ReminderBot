@@ -8,26 +8,24 @@ from handlers.reminder import scheduler, data_time, year, month, day, hours, min
 from db import reminderdb
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import sqlite3 as sq
-global send, text
+# global send #, text
 year = datetime.now().year
-
 now = datetime.now()
 nows = now.strftime("%Y-%m-%d %H:%M")
 print(nows)
 base = sq.connect("reminder.db")
 cur = base.cursor()
 text = "" 
-send = nows
-send = now.strptime(send, "%Y-%m-%d %H:%M") # перевожу в стрінг
-date_format = "%Y-%m-%d %H:%M:%S.%f"
-send = send.replace(second=0) #microsecond=0,
-print("send after replace", send)
-print("send type after replace", type(send))
-# date_time_obj = datetime.strptime(send, date_format)
-# print("Об'єкт datetime:", date_time_obj)
-# print("Тип об'єкту datetime:", type(date_time_obj))
-print("first send type", type(send))
-send_date = f"{now}"
+# send = nows
+# send = now.strptime(send, "%Y-%m-%d %H:%M") # перевожу в стрінг
+# date_format = "%Y-%m-%d %H:%M:%S.%f"
+# send = send.replace(second=0) #microsecond=0,
+# print("send after replace", send)
+# print("send type after replace", type(send))
+# # date_time_obj = datetime.strptime(send, date_format)
+# # print("Об'єкт datetime:", date_time_obj)
+# # print("Тип об'єкту datetime:", type(date_time_obj))
+# print("first send type", type(send))
 
 # 
 # cur.execute("SELECT date FROM reminder WHERE id=1")
@@ -45,7 +43,7 @@ class FSMRe(StatesGroup):
     qtime = State()
 
 
-async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str):
+async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str, send:datetime):
     cur.execute("SELECT date FROM reminder WHERE id=1")
     send_date = cur.fetchone()[0]
     send = datetime.strptime(send_date, '%Y-%m-%d %H:%M:%S.%f')
@@ -57,9 +55,10 @@ async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str):
     
 
 def schedule_jobs(chat_id, text):
+    global send
     print("Сенд в функції джобс",send)
     print("Тип сенда в функції джобс",type(send))
-    scheduler.add_job(send_message_to_admin, "date", run_date=f"{send}",
+    scheduler.add_job(send_message_to_admin, "date", run_date=send,
                       timezone='Europe/Kiev', args=(dp, chat_id, text, send))
 
 async def on_startup(_, text):
