@@ -15,40 +15,18 @@ nows = now.strftime("%Y-%m-%d %H:%M")
 print(nows)
 base = sq.connect("reminder.db")
 cur = base.cursor()
+# send = now
 text = "" 
-# send = nows
-# send = now.strptime(send, "%Y-%m-%d %H:%M") # перевожу в стрінг
-# date_format = "%Y-%m-%d %H:%M:%S.%f"
-# send = send.replace(second=0) #microsecond=0,
-# print("send after replace", send)
-# print("send type after replace", type(send))
-# # date_time_obj = datetime.strptime(send, date_format)
-# # print("Об'єкт datetime:", date_time_obj)
-# # print("Тип об'єкту datetime:", type(date_time_obj))
-# print("first send type", type(send))
-
-# 
-# cur.execute("SELECT date FROM reminder WHERE id=1")
-# send_date = cur.fetchone()[0]
-# send = datetime.strptime(send_date, '%Y-%m-%d %H:%M')
-#   
-# db_text = cur.execute("SELECT text FROM reminder WHERE id=1")
-# text = cur.fetchone()[0]
-# 
-
-
-class FSMRe(StatesGroup):
-    qtext = State()
-    qdate = State()
-    qtime = State()
-
 
 async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str, send:datetime):
+    # global sendfunc
+    # global send 
+    # send = None
     cur.execute("SELECT date FROM reminder WHERE id=1")
     send_date = cur.fetchone()[0]
-    send = datetime.strptime(send_date, '%Y-%m-%d %H:%M:%S.%f')
+    send = datetime.strptime(send_date, '%Y-%m-%d %H:%M') # перевожу в дейттайм
     cur.execute("SELECT text FROM reminder WHERE id=1")
-    text = cur.fetchone()[0] 
+    text = cur.fetchone()[0]
     await dp.bot.send_message(chat_id, text)
     print("Сенд в функції",send)
     print("Тип сенда в функції",type(send))
@@ -56,30 +34,18 @@ async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str, send:date
 
 def schedule_jobs(chat_id, text):
     global send 
+    send = None
+    # send = now
     print("Сенд в функції джобс",send)
     print("Тип сенда в функції джобс",type(send))
+    # send = sendfunc
     scheduler.add_job(send_message_to_admin, "date", run_date=send,
                       timezone='Europe/Kiev', args=(dp, chat_id, text, send))
 
 async def on_startup(_, text):
-    # print("time_obj", time_obj)
-    # print("text", text)
-    # print("date_obj", date_obj),
-    # print(type(time_obj))
-    # print(type(text))я
-    # print(type(date_obj))
-    # print(type(datetime_obj), datetime_obj)
-    # print(type(datetime_upd), datetime_upd)
-    # print(type(datetime_int), datetime_int)
     schedule_jobs('5197139803', text)
     reminderdb.start()
     
-
-# if __name__ == "__main__":
-#     scheduler.start()
-#     executor.start_polling(dp, skip_updates=True, on_startup=on_startup, args=(text,))
-
-
 if __name__ == "__main__":
     scheduler.start()
     on_startup_with_args = functools.partial(on_startup, text=text)
