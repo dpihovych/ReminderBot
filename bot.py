@@ -55,7 +55,7 @@ async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str, send:date
     
 
 def schedule_jobs(chat_id, text):
-    global send
+    global send 
     print("Сенд в функції джобс",send)
     print("Тип сенда в функції джобс",type(send))
     scheduler.add_job(send_message_to_admin, "date", run_date=send,
