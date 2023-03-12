@@ -10,14 +10,6 @@ from aiogram import types, Bot
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 scheduler = AsyncIOScheduler()
-# now = datetime.now()
-# data_time = 0
-# year = now - now
-# month = now - now
-# day = now - now
-# hours = now - now
-# minutes = now - now
-# global re_answer
 
 
 bot = Bot(token=config.BOT_TOKEN, parse_mode="HTML")

@@ -8,14 +8,8 @@ from handlers.reminder import scheduler
 from db import reminderdb
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import sqlite3 as sq
-# global send #, text
-# year = datetime.now().year
-# now = datetime.now()
-# nows = now.strftime("%Y-%m-%d %H:%M")
-# print(nows)
 base = sq.connect("reminder.db")
 cur = base.cursor()
-# send = now
 text = "" 
 
 async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str, send:datetime):
@@ -35,7 +29,6 @@ async def send_message_to_admin(dp: Dispatcher, chat_id:str, text:str, send:date
 def schedule_jobs(chat_id, text):
     global send 
     send = None
-    # send = now
     print("Сенд в функції джобс",send)
     print("Тип сенда в функції джобс",type(send))
     # send = sendfunc
