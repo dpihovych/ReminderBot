@@ -9,7 +9,7 @@ from db import reminderdb
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import sqlite3 as sq
 # global send #, text
-year = datetime.now().year
+# year = datetime.now().year
 # now = datetime.now()
 # nows = now.strftime("%Y-%m-%d %H:%M")
 # print(nows)
