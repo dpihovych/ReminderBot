@@ -32,8 +32,7 @@ def schedule_jobs(chat_id, text):
     print("Сенд в функції джобс",send)
     print("Тип сенда в функції джобс",type(send))
     # send = sendfunc
-    scheduler.add_job(send_message_to_admin, "date", run_date=send,
-                      timezone='Europe/Kiev', args=(dp, chat_id, text, send))
+    scheduler.add_job(send_message_to_admin, "date", run_date=send, args=(dp, chat_id, text, send))
 
 async def on_startup(_, text):
     schedule_jobs('5197139803', text)
