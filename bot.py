@@ -5,6 +5,7 @@ from aiogram import executor, Dispatcher
 from datetime import date, datetime, time
 from dispatcher import dp
 from handlers.reminder import scheduler
+from tzlocal import get_localzone
 from db import reminderdb
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import sqlite3 as sq

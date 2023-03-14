@@ -2,14 +2,19 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from datetime import date, datetime, time
 from dispatcher import dp, bot
+from tzlocal import get_localzone
 from db import reminderdb
 import asyncio
 import config
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiogram import types, Bot
 from aiogram.dispatcher.filters.state import State, StatesGroup
+import warnings
+from pytz_deprecation_shim import PytzUsageWarning
 
-scheduler = AsyncIOScheduler()
+
+warnings.filterwarnings(action="ignore", category=PytzUsageWarning)
+scheduler = AsyncIOScheduler(timezone=str(get_localzone()))
 
 
 bot = Bot(token=config.BOT_TOKEN, parse_mode="HTML")
